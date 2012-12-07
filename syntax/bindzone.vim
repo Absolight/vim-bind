@@ -47,12 +47,12 @@ hi def link     zoneClass               Include
 " keep sorted by rrtype value as possible, no obsolete or experimental RR.
 syn keyword     zoneRRType              contained A nextgroup=zoneIPAddr skipwhite
 syn keyword     zoneRRType              contained AAAA nextgroup=zoneIP6Addr skipwhite
-syn keyword     zoneRRType              contained NS CNAME SOA WKS PTR HINFO
-      \ MINFO MX TXT RP AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS
-      \ LOC EID NIMLOC SRV ATMA NAPTR KX CERT DNAME SINK OPT APL DS SSHFP
-      \ IPSECKEY RRSIG NSEC DNSKEY DHCID NSEC3 NSEC3PARAM TLSA HIP NINFO RKEY
-      \ TALINK CDS SPF UINFO UID GID UNSPEC NID L32 L64 LP TKEY TSIG IXFR AXFR
-      \ MAILB URI CAA TA DLV
+syn keyword     zoneRRType              contained NS CNAME PTR DNAME nextgroup=zoneDomain skipwhite
+syn keyword     zoneRRType              contained SOA WKS HINFO MX TXT RP
+      \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC SRV
+      \ ATMA NAPTR KX CERT SINK OPT APL DS SSHFP IPSECKEY RRSIG NSEC DNSKEY
+      \ DHCID NSEC3 NSEC3PARAM TLSA HIP NINFO RKEY TALINK CDS SPF UINFO UID
+      \ GID UNSPEC NID L32 L64 LP URI CAA TA DLV
       \ nextgroup=zoneRData skipwhite
 syn match       zoneRRType              contained /\vTYPE\d+/ nextgroup=zoneUnknownType1 skipwhite
 hi def link     zoneRRType              Type
