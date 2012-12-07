@@ -1,109 +1,111 @@
 " Vim syntax file
 " Language:     BIND zone files (RFC1035)
-" Maintainer:   Julian Mehnle <julian@mehnle.net>
-" URL:          http://www.mehnle.net/source/odds+ends/vim/syntax/
+" Maintainer:   Mathieu Arnold <mat@mat.cc>
+" URL:          https://github.com/Absolight/vim-bind
 " Last Change:  Thu 2006-04-20 12:30:45 UTC
-" 
-" Based on an earlier version by Вячеслав Горбанев (Slava Gorbanev), with
-" heavy modifications.
-" 
-" $Id: bindzone.vim,v 1.2 2006/04/20 22:06:21 vimboss Exp $
+"
+" Based on an earlier version by Julian Mehnle, with heavy modifications.
 
-" For version 5.x: Clear all syntax items
-" For version 6.x: Quit when a syntax file was already loaded
-if version < 600
-  syntax clear
-elseif exists("b:current_syntax")
+if exists("b:current_syntax")
   finish
 endif
 
 syn case match
 
 " Directives
-syn region      zoneRRecord     start=/^/ end=/$/ contains=zoneOwnerName,zoneSpecial,zoneTTL,zoneClass,zoneRRType,zoneComment,zoneUnknown
+syn region      zoneRRecord             start=/\v^/ end=/\v$/ contains=zoneOwnerName,zoneSpecial,zoneTTL,zoneClass,zoneRRType,zoneComment,zoneUnknown
 
-syn match       zoneDirective   /^\$ORIGIN\s\+/   nextgroup=zoneOrigin,zoneUnknown
-syn match       zoneDirective   /^\$TTL\s\+/      nextgroup=zoneNumber,zoneUnknown
-syn match       zoneDirective   /^\$INCLUDE\s\+/  nextgroup=zoneText,zoneUnknown
-syn match       zoneDirective   /^\$GENERATE\s/
+syn match       zoneDirective           /\v^\$ORIGIN\s+/   nextgroup=zoneOrigin,zoneUnknown
+syn match       zoneDirective           /\v^\$TTL\s+/      nextgroup=zoneNumber,zoneUnknown
+syn match       zoneDirective           /\v^\$INCLUDE\s+/  nextgroup=zoneText,zoneUnknown
+syn match       zoneDirective           /\v^\$GENERATE\s/
+hi def link     zoneDirective           Macro
 
-syn match       zoneUnknown     contained /\S\+/
+syn match       zoneUnknown             contained /\v\S+/
+hi def link     zoneUnknown             Error
 
-syn match       zoneOwnerName   contained /^[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]\+\(\s\|;\)\@=/ nextgroup=zoneTTL,zoneClass,zoneRRType skipwhite
-syn match       zoneOrigin      contained  /[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]\+\(\s\|;\|$\)\@=/
-syn match       zoneDomain      contained  /[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]\+\(\s\|;\|$\)\@=/
+syn match       zoneOwnerName           contained /^[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]\+\(\s\|;\)\@=/ nextgroup=zoneTTL,zoneClass,zoneRRType skipwhite
+hi def link     zoneOwnerName           Statement
 
-syn match       zoneSpecial     contained /^[@*.]\s/
-syn match       zoneTTL         contained /\<\d[0-9HhWwDd]*\>/  nextgroup=zoneClass,zoneRRType skipwhite
-syn keyword     zoneClass       contained IN CHAOS              nextgroup=zoneRRType,zoneTTL   skipwhite
-syn keyword     zoneRRType      contained A AAAA CNAME HINFO MX NS PTR SOA SRV TXT nextgroup=zoneRData skipwhite
-syn match       zoneRData       contained /[^;]*/ contains=zoneDomain,zoneIPAddr,zoneIP6Addr,zoneText,zoneNumber,zoneParen,zoneUnknown
+syn match       zoneOrigin              contained  /[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]\+\(\s\|;\|$\)\@=/
+hi def link     zoneOrigin              Statement
 
-syn match       zoneIPAddr      contained /\<[0-9]\{1,3}\(\.[0-9]\{1,3}\)\{,3}\>/
+syn match       zoneDomain              contained  /[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]\+\(\s\|;\|$\)\@=/
+hi def link     zoneDomain              Identifier
+
+syn match       zoneSpecial             contained /\v^[@*.]\s/
+hi def link     zoneSpecial             Special
+
+syn match       zoneTTL                 contained /\v<(\d[HhWwDd]?)*>/ nextgroup=zoneClass,zoneRRType skipwhite
+hi def link     zoneTTL                 Constant
+
+syn keyword     zoneClass               contained IN CHAOS nextgroup=zoneRRType,zoneTTL   skipwhite
+hi def link     zoneClass               Include
+
+" From :
+" http://www.iana.org/assignments/dns-parameters/dns-parameters.xml#dns-parameters-3
+" keep sorted by rrtype value, no obsolete or experimental RR.
+syn keyword     zoneRRType              contained A NS CNAME SOA WKS PTR HINFO
+      \ MINFO MX TXT RP AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS AAAA
+      \ LOC EID NIMLOC SRV ATMA NAPTR KX CERT DNAME SINK OPT APL DS SSHFP
+      \ IPSECKEY RRSIG NSEC DNSKEY DHCID NSEC3 NSEC3PARAM TLSA HIP NINFO RKEY
+      \ TALINK CDS SPF UINFO UID GID UNSPEC NID L32 L64 LP TKEY TSIG IXFR AXFR
+      \ MAILB URI CAA TA DLV
+      \ nextgroup=zoneRData skipwhite
+syn match       zoneRRType              contained /\vTYPE\d+/ nextgroup=zoneUnknownType1 skipwhite
+hi def link     zoneRRType              Type
+
+syn match       zoneRData               contained /[^;]*/ contains=zoneDomain,zoneIPAddr,zoneIP6Addr,zoneText,zoneNumber,zoneParen,zoneBase64,zoneUnknown
+
+syn match       zoneIPAddr              contained /\<[0-9]\{1,3}\(\.[0-9]\{1,3}\)\{,3}\>/
+hi def link     zoneIPAddr              Number
 
 "   Plain IPv6 address          IPv6-embedded-IPv4 address
 "   1111:2:3:4:5:6:7:8          1111:2:3:4:5:6:127.0.0.1
-syn match       zoneIP6Addr     contained /\<\(\x\{1,4}:\)\{6}\(\x\{1,4}:\x\{1,4}\|\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
+syn match       zoneIP6Addr             contained /\<\(\x\{1,4}:\)\{6}\(\x\{1,4}:\x\{1,4}\|\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
 "   ::[...:]8                   ::[...:]127.0.0.1
-syn match       zoneIP6Addr     contained /\s\@<=::\(\(\x\{1,4}:\)\{,6}\x\{1,4}\|\(\x\{1,4}:\)\{,5}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
+syn match       zoneIP6Addr             contained /\s\@<=::\(\(\x\{1,4}:\)\{,6}\x\{1,4}\|\(\x\{1,4}:\)\{,5}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
 "   1111::[...:]8               1111::[...:]127.0.0.1
-syn match       zoneIP6Addr     contained /\<\(\x\{1,4}:\)\{1}:\(\(\x\{1,4}:\)\{,5}\x\{1,4}\|\(\x\{1,4}:\)\{,4}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
+syn match       zoneIP6Addr             contained /\<\(\x\{1,4}:\)\{1}:\(\(\x\{1,4}:\)\{,5}\x\{1,4}\|\(\x\{1,4}:\)\{,4}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
 "   1111:2::[...:]8             1111:2::[...:]127.0.0.1
-syn match       zoneIP6Addr     contained /\<\(\x\{1,4}:\)\{2}:\(\(\x\{1,4}:\)\{,4}\x\{1,4}\|\(\x\{1,4}:\)\{,3}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
+syn match       zoneIP6Addr             contained /\<\(\x\{1,4}:\)\{2}:\(\(\x\{1,4}:\)\{,4}\x\{1,4}\|\(\x\{1,4}:\)\{,3}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
 "   1111:2:3::[...:]8           1111:2:3::[...:]127.0.0.1
-syn match       zoneIP6Addr     contained /\<\(\x\{1,4}:\)\{3}:\(\(\x\{1,4}:\)\{,3}\x\{1,4}\|\(\x\{1,4}:\)\{,2}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
+syn match       zoneIP6Addr             contained /\<\(\x\{1,4}:\)\{3}:\(\(\x\{1,4}:\)\{,3}\x\{1,4}\|\(\x\{1,4}:\)\{,2}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
 "   1111:2:3:4::[...:]8         1111:2:3:4::[...:]127.0.0.1
-syn match       zoneIP6Addr     contained /\<\(\x\{1,4}:\)\{4}:\(\(\x\{1,4}:\)\{,2}\x\{1,4}\|\(\x\{1,4}:\)\{,1}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
+syn match       zoneIP6Addr             contained /\<\(\x\{1,4}:\)\{4}:\(\(\x\{1,4}:\)\{,2}\x\{1,4}\|\(\x\{1,4}:\)\{,1}\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
 "   1111:2:3:4:5::[...:]8       1111:2:3:4:5::127.0.0.1
-syn match       zoneIP6Addr     contained /\<\(\x\{1,4}:\)\{5}:\(\(\x\{1,4}:\)\{,1}\x\{1,4}\|\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
+syn match       zoneIP6Addr             contained /\<\(\x\{1,4}:\)\{5}:\(\(\x\{1,4}:\)\{,1}\x\{1,4}\|\([0-2]\?\d\{1,2}\.\)\{3}[0-2]\?\d\{1,2}\)\>/
 "   1111:2:3:4:5:6::8           -
-syn match       zoneIP6Addr     contained /\<\(\x\{1,4}:\)\{6}:\x\{1,4}\>/
+syn match       zoneIP6Addr             contained /\<\(\x\{1,4}:\)\{6}:\x\{1,4}\>/
 "   1111[:...]::                -
-syn match       zoneIP6Addr     contained /\<\(\x\{1,4}:\)\{1,7}:\(\s\|;\|$\)\@=/
+syn match       zoneIP6Addr             contained /\<\(\x\{1,4}:\)\{1,7}:\(\s\|;\|$\)\@=/
+hi def link     zoneIP6Addr             Number
 
-syn match       zoneText        contained /"\([^"\\]\|\\.\)*"\(\s\|;\|$\)\@=/
-syn match       zoneNumber      contained /\<[0-9]\+\(\s\|;\|$\)\@=/
-syn match       zoneSerial      contained /\<[0-9]\{9,10}\(\s\|;\|$\)\@=/
+syn match       zoneText                contained /"\([^"\\]\|\\.\)*"\(\s\|;\|$\)\@=/
+hi def link     zoneText                String
 
-syn match       zoneErrParen    /)/
-syn region      zoneParen       contained start="(" end=")" contains=zoneSerial,zoneNumber,zoneComment
-syn match       zoneComment     /;.*/
+syn match       zoneNumber              contained /\<[0-9]\+\(\s\|;\|$\)\@=/
+hi def link     zoneNumber              Number
 
-" Define the default highlighting.
-" For version 5.7 and earlier: only when not done already
-" For version 5.8 and later: only when an item doesn't have highlighting yet
-if version >= 508 || !exists("did_bind_zone_syn_inits")
-  if version < 508
-    let did_bind_zone_syn_inits = 1
-    command -nargs=+ HiLink hi link <args>
-  else
-    command -nargs=+ HiLink hi def link <args>
-  endif
+syn match       zoneSerial              contained /\<[0-9]\{9,10}\(\s\|;\|$\)\@=/
+hi def link     zoneSerial              Special
 
-  HiLink zoneDirective    Macro
-  
-  HiLink zoneUnknown      Error
-  
-  HiLink zoneOrigin       Statement
-  HiLink zoneOwnerName    Statement
-  HiLink zoneDomain       Identifier
-  
-  HiLink zoneSpecial      Special
-  HiLink zoneTTL          Constant
-  HiLink zoneClass        Include
-  HiLink zoneRRType       Type
-  
-  HiLink zoneIPAddr       Number
-  HiLink zoneIP6Addr      Number
-  HiLink zoneText         String
-  HiLink zoneNumber       Number
-  HiLink zoneSerial       Special
-  
-  HiLink zoneErrParen     Error
-  HiLink zoneComment      Comment
+syn match       zoneBase64              contained /\v<[a-zA-Z0-9\/\=\+]+>/
+hi def link     zoneBase64              String
 
-  delcommand HiLink
-endif
+syn match       zoneErrParen            /)/
+hi def link     zoneErrParen            Error
+
+syn region      zoneParen               contained start="(" end=")" contains=zoneSerial,zoneNumber,zoneComment
+syn match       zoneComment             /;.*/
+hi def link     zoneComment             Comment
+
+syn match       zoneUnknownType1        contained /\v\\\#/ nextgroup=zoneUnknownType2 skipwhite
+hi def link     zoneUnknownType1        Macro
+syn match       zoneUnknownType2        contained /\v\d+/ nextgroup=zoneUnknownType3 skipwhite
+hi def link     zoneUnknownType2        Number
+syn match       zoneUnknownType3        contained /\v[0-9a-fA-F\ ]+/
+hi def link     zoneUnknownType3        String
 
 let b:current_syntax = "bindzone"
 
