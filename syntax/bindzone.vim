@@ -44,9 +44,11 @@ hi def link     zoneClass               Include
 
 " From :
 " http://www.iana.org/assignments/dns-parameters/dns-parameters.xml#dns-parameters-3
-" keep sorted by rrtype value, no obsolete or experimental RR.
-syn keyword     zoneRRType              contained A NS CNAME SOA WKS PTR HINFO
-      \ MINFO MX TXT RP AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS AAAA
+" keep sorted by rrtype value as possible, no obsolete or experimental RR.
+syn keyword     zoneRRType              contained A nextgroup=zoneIPAddr skipwhite
+syn keyword     zoneRRType              contained AAAA nextgroup=zoneIP6Addr skipwhite
+syn keyword     zoneRRType              contained NS CNAME SOA WKS PTR HINFO
+      \ MINFO MX TXT RP AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS
       \ LOC EID NIMLOC SRV ATMA NAPTR KX CERT DNAME SINK OPT APL DS SSHFP
       \ IPSECKEY RRSIG NSEC DNSKEY DHCID NSEC3 NSEC3PARAM TLSA HIP NINFO RKEY
       \ TALINK CDS SPF UINFO UID GID UNSPEC NID L32 L64 LP TKEY TSIG IXFR AXFR
@@ -55,7 +57,7 @@ syn keyword     zoneRRType              contained A NS CNAME SOA WKS PTR HINFO
 syn match       zoneRRType              contained /\vTYPE\d+/ nextgroup=zoneUnknownType1 skipwhite
 hi def link     zoneRRType              Type
 
-syn match       zoneRData               contained /[^;]*/ contains=zoneDomain,zoneIPAddr,zoneIP6Addr,zoneText,zoneNumber,zoneParen,zoneBase64,zoneUnknown
+syn match       zoneRData               contained /[^;]*/ contains=zoneDomain,zoneText,zoneNumber,zoneParen,zoneBase64,zoneUnknown
 
 syn match       zoneIPAddr              contained /\<[0-9]\{1,3}\(\.[0-9]\{1,3}\)\{,3}\>/
 hi def link     zoneIPAddr              Number
