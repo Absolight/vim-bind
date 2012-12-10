@@ -16,7 +16,7 @@ syn case match
 syn region      zoneRRecord             start=/\v^/ end=/\v$/ contains=zoneOwnerName,zoneSpecial,zoneTTL,zoneClass,zoneRRType,zoneComment,zoneUnknown
 
 syn match       zoneDirective           /\v^\$ORIGIN\s+/   nextgroup=zoneOrigin,zoneUnknown
-syn match       zoneDirective           /\v^\$TTL\s+/      nextgroup=zoneNumber,zoneUnknown
+syn match       zoneDirective           /\v^\$TTL\s+/      nextgroup=zoneNumber,zoneTTL,zoneUnknown
 syn match       zoneDirective           /\v^\$INCLUDE\s+/  nextgroup=zoneText,zoneUnknown
 syn match       zoneDirective           /\v^\$GENERATE\s/
 hi def link     zoneDirective           Macro
