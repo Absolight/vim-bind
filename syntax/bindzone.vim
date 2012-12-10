@@ -31,7 +31,7 @@ syn match       zoneOrigin              contained  /\v[^[:space:]!"#$%&'()*+,\/:
 hi def link     zoneOrigin              Statement
 
 syn match       zoneDomain              contained  /\v[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]+(\s|;|$)@=/
-hi def link     zoneDomain              Identifier
+hi def link     zoneDomain              Underlined
 
 syn match       zoneSpecial             contained /\v^[@*.]\s/
 hi def link     zoneSpecial             Special
@@ -85,10 +85,10 @@ syn match       zoneIP6Addr             contained /\v<(\x{1,4}:){1,7}:(\s|;|$)@=
 hi def link     zoneIP6Addr             Number
 
 syn match       zoneBase64              contained /\v[[:space:]\n]@<=[a-zA-Z0-9\/\=\+]+[[:space:]\n]@=/
-hi def link     zoneBase64              Underlined
+hi def link     zoneBase64              Identifier
 
 syn match       zoneHex                 contained /\v[[:space:]\n]@<=[a-fA-F0-9]+[[:space:]\n]@=/
-hi def link     zoneHex                 Underlined
+hi def link     zoneHex                 Identifier
 
 syn match       zoneText                contained /\v"([^"\\]|\\.)*"(\s|;|$)@=/
 hi def link     zoneText                String
