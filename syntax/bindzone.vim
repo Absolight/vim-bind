@@ -84,6 +84,9 @@ syn match       zoneIP6Addr             contained /\v<(\x{1,4}:){6}:\x{1,4}>/
 syn match       zoneIP6Addr             contained /\v<(\x{1,4}:){1,7}:(\s|;|$)@=/
 hi def link     zoneIP6Addr             Number
 
+syn match       zoneBase64              contained /\v[[:space:]\n]@<=[a-zA-Z0-9\/\=\+]+[[:space:]\n]@=/
+hi def link     zoneBase64              Underlined
+
 syn match       zoneText                contained /\v"([^"\\]|\\.)*"(\s|;|$)@=/
 hi def link     zoneText                String
 
@@ -92,9 +95,6 @@ hi def link     zoneNumber              Number
 
 syn match       zoneSerial              contained /\v<[0-9]{9,10}(\s|;|$)@=/
 hi def link     zoneSerial              Special
-
-syn match       zoneBase64              contained /\v<[a-zA-Z0-9\/\=\+]+>/
-hi def link     zoneBase64              String
 
 syn match       zoneMX                  contained /\v[^;]*/ contains=zoneNumber,zoneDomain
 
