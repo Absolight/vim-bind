@@ -58,7 +58,7 @@ syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
 syn match       zoneRRType              contained /\vTYPE\d+/ nextgroup=zoneUnknownType1 skipwhite
 hi def link     zoneRRType              Type
 
-syn match       zoneRData               contained /\v[^;]*/ contains=zoneDomain,zoneText,zoneNumber,zoneParen,zoneBase64,zoneUnknown
+syn match       zoneRData               contained /\v[^;]*/ contains=zoneDomain,zoneText,zoneNumber,zoneParen,zoneBase64,zoneHex,zoneUnknown
 
 syn match       zoneIPAddr              contained /\v<[0-9]{1,3}(.[0-9]{1,3}){,3}>/
 hi def link     zoneIPAddr              Number
@@ -87,6 +87,9 @@ hi def link     zoneIP6Addr             Number
 syn match       zoneBase64              contained /\v[[:space:]\n]@<=[a-zA-Z0-9\/\=\+]+[[:space:]\n]@=/
 hi def link     zoneBase64              Underlined
 
+syn match       zoneHex                 contained /\v[[:space:]\n]@<=[a-fA-F0-9]+[[:space:]\n]@=/
+hi def link     zoneHex                 Underlined
+
 syn match       zoneText                contained /\v"([^"\\]|\\.)*"(\s|;|$)@=/
 hi def link     zoneText                String
 
@@ -101,7 +104,8 @@ syn match       zoneMX                  contained /\v[^;]*/ contains=zoneNumber,
 syn match       zoneErrParen            /\v\)/
 hi def link     zoneErrParen            Error
 
-syn region      zoneParen               contained start="(" end=")" contains=zoneSerial,zoneNumber,zoneComment
+syn region      zoneParen               contained start="(" end=")" contains=zoneBase64,zoneHex,zoneSerial,zoneNumber,zoneComment,zoneDomain
+
 syn match       zoneComment             /\v\;.*/
 hi def link     zoneComment             Comment
 
