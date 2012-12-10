@@ -48,7 +48,8 @@ hi def link     zoneClass               Include
 syn keyword     zoneRRType              contained A nextgroup=zoneIPAddr skipwhite
 syn keyword     zoneRRType              contained AAAA nextgroup=zoneIP6Addr skipwhite
 syn keyword     zoneRRType              contained NS CNAME PTR DNAME nextgroup=zoneDomain skipwhite
-syn keyword     zoneRRType              contained SOA WKS HINFO MX TXT RP
+syn keyword     zoneRRType              contained MX nextgroup=zoneMX skipwhite
+syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
       \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC SRV
       \ ATMA NAPTR KX CERT SINK OPT APL DS SSHFP IPSECKEY RRSIG NSEC DNSKEY
       \ DHCID NSEC3 NSEC3PARAM TLSA HIP NINFO RKEY TALINK CDS SPF UINFO UID
@@ -94,6 +95,8 @@ hi def link     zoneSerial              Special
 
 syn match       zoneBase64              contained /\v<[a-zA-Z0-9\/\=\+]+>/
 hi def link     zoneBase64              String
+
+syn match       zoneMX                  contained /\v[^;]*/ contains=zoneNumber,zoneDomain
 
 syn match       zoneErrParen            /\v\)/
 hi def link     zoneErrParen            Error
