@@ -42,13 +42,21 @@ hi def link     zoneTTL                 Constant
 syn keyword     zoneClass               contained IN CHAOS nextgroup=zoneRRType,zoneTTL   skipwhite
 hi def link     zoneClass               Include
 
-let b:looseDataRegexp = { 'zoneHex': "/\\v[^;]+/", 'zoneBase64': "/\\v[^;]+/", }
+let s:dataRegexp = {}
+let s:dataRegexp["zoneNumber"] = "/\\v<[0-9]+(\\s|;|$)@=/"
+let s:dataRegexp["zoneDomain"] = "/\\v[^[:space:]!\"#$%&'()*+,\\/:;<=>?@[\\]\\^`{|}~]+(\\s|;|$)@=/"
+let s:dataRegexp["zoneBase64"] = "/\\v[[:space:]\\n]@<=[a-zA-Z0-9\\/\\=\\+]+(\\s|;|$)@=/"
+let s:dataRegexp["zoneHex"] = "/\\v[[:space:]\\n]@<=[a-fA-F0-9]+(\\s+[a-fA-F0-9]+)*(\\s|;|$)@=/"
+
+function! s:zoneName(name,num)
+  return "zone_" . a:name . "_" . a:num
+endfunction
 
 function! s:createChain(whose, ...)
   let l:first = join(split(a:whose, " "), "_")
   let l:number = 1
   for args in a:000
-    exe "syn keyword zoneRRType contained " . a:whose . " nextgroup=zone_" . l:first . "_" . l:number . " skipwhite"
+    exe "syn keyword zoneRRType contained " . a:whose . " nextgroup=" . s:zoneName(l:first, l:number) . " skipwhite"
     let l:c = 0
     if type(args) == type("")
       let i = [args]
@@ -57,17 +65,18 @@ function! s:createChain(whose, ...)
     endif
     while l:c < len(i)
       let l:keyword = i[l:c]
-      if has_key(b:looseDataRegexp, l:keyword)
-        let l:reg = b:looseDataRegexp[l:keyword]
+      if has_key(s:dataRegexp, l:keyword)
+        let l:reg = s:dataRegexp[l:keyword]
       else
         let l:reg = "/\\v[^;[:space:]]+/"
       endif
-      let l:str = "syn match zone_" . l:first . "_" . l:number . " contained " . l:reg . " contains=zoneUnknown," . l:keyword
+      let l:str = "syn match " . s:zoneName(l:first, l:number) . " contained " . l:reg
       if l:c < len(i) - 1
-        let l:str = l:str . " nextgroup=zone_" . l:first . "_" . (l:number + 1)
+        let l:str = l:str . " nextgroup=" . s:zoneName(l:first, l:number + 1)
       endif
       let l:str = l:str . " skipwhite"
       exe l:str
+      exe "hi link " . s:zoneName(l:first, l:number) . " " . l:keyword
       let l:c += 1
       let l:number += 1
     endwhile
