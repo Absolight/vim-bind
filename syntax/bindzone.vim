@@ -98,10 +98,12 @@ call s:createChain("DS DLV TLSA NSEC3PARAM", ["zoneNumber", "zoneNumber", "zoneN
 call s:createChain("DNSKEY", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneBase64"])
 call s:createChain("SSHFP", ["zoneNumber", "zoneNumber", "zoneHex"])
 call s:createChain("RRSIG", ["zoneRR", "zoneNumber", "zoneNumber", "zoneNumber", "zoneNumber", "zoneNumber", "zoneNumber", "zoneDomain", "zoneBase64"])
+call s:createChain("NSEC", ["zoneDomain", "zoneRR"])
+call s:createChain("NSEC3", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneHex", "zoneDomain", "zoneRR"])
 syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
       \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC
-      \ ATMA NAPTR KX CERT SINK OPT APL IPSECKEY NSEC
-      \ DHCID NSEC3 HIP NINFO RKEY TALINK CDS SPF UINFO UID
+      \ ATMA NAPTR KX CERT SINK OPT APL IPSECKEY
+      \ DHCID HIP NINFO RKEY TALINK CDS SPF UINFO UID
       \ GID UNSPEC NID L32 L64 LP URI CAA TA
       \ nextgroup=zoneRData skipwhite
 syn match       zoneRRType              contained /\vTYPE\d+/ nextgroup=zoneUnknownType1 skipwhite
