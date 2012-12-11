@@ -81,11 +81,12 @@ syn keyword     zoneRRType              contained A nextgroup=zoneIPAddr skipwhi
 syn keyword     zoneRRType              contained AAAA nextgroup=zoneIP6Addr skipwhite
 syn keyword     zoneRRType              contained NS CNAME PTR DNAME nextgroup=zoneDomain skipwhite
 call s:createChain("MX", ["zoneNumber", "zoneDomain"])
-call s:createChain("DS DLV", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneHex"])
+call s:createChain("SRV", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneDomain"])
+call s:createChain("DS DLV TLSA", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneHex"])
 syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
-      \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC SRV
+      \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC
       \ ATMA NAPTR KX CERT SINK OPT APL SSHFP IPSECKEY RRSIG NSEC DNSKEY
-      \ DHCID NSEC3 NSEC3PARAM TLSA HIP NINFO RKEY TALINK CDS SPF UINFO UID
+      \ DHCID NSEC3 NSEC3PARAM HIP NINFO RKEY TALINK CDS SPF UINFO UID
       \ GID UNSPEC NID L32 L64 LP URI CAA TA
       \ nextgroup=zoneRData skipwhite
 syn match       zoneRRType              contained /\vTYPE\d+/ nextgroup=zoneUnknownType1 skipwhite
