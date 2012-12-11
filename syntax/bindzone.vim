@@ -49,11 +49,12 @@ syn keyword     zoneRRType              contained A nextgroup=zoneIPAddr skipwhi
 syn keyword     zoneRRType              contained AAAA nextgroup=zoneIP6Addr skipwhite
 syn keyword     zoneRRType              contained NS CNAME PTR DNAME nextgroup=zoneDomain skipwhite
 syn keyword     zoneRRType              contained MX nextgroup=zoneMX skipwhite
+syn keyword     zoneRRType              contained DS DLV nextgroup=zoneDS skipwhite
 syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
       \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC SRV
-      \ ATMA NAPTR KX CERT SINK OPT APL DS SSHFP IPSECKEY RRSIG NSEC DNSKEY
+      \ ATMA NAPTR KX CERT SINK OPT APL SSHFP IPSECKEY RRSIG NSEC DNSKEY
       \ DHCID NSEC3 NSEC3PARAM TLSA HIP NINFO RKEY TALINK CDS SPF UINFO UID
-      \ GID UNSPEC NID L32 L64 LP URI CAA TA DLV
+      \ GID UNSPEC NID L32 L64 LP URI CAA TA
       \ nextgroup=zoneRData skipwhite
 syn match       zoneRRType              contained /\vTYPE\d+/ nextgroup=zoneUnknownType1 skipwhite
 hi def link     zoneRRType              Type
@@ -100,6 +101,8 @@ syn match       zoneSerial              contained /\v<[0-9]{9,10}(\s|;|$)@=/
 hi def link     zoneSerial              Special
 
 syn match       zoneMX                  contained /\v[^;]*/ contains=zoneNumber,zoneDomain
+
+syn match       zoneDS                  contained /\v[^;]*/ contains=zoneNumber,zoneHex
 
 syn match       zoneErrParen            /\v\)/
 hi def link     zoneErrParen            Error
