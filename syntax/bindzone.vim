@@ -30,7 +30,7 @@ hi def link     zoneOwnerName           Statement
 syn match       zoneOrigin              contained  /\v[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]+(\s|;|$)@=/
 hi def link     zoneOrigin              Statement
 
-syn match       zoneDomain              contained  /\v[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]+(\s|;|$)@=/
+syn match       zoneDomain              contained  /\v([^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]+|\@)(\s|;|$)@=/
 hi def link     zoneDomain              Underlined
 
 syn match       zoneSpecial             contained /\v^(\@|\*(\.\S*)?)\s@=/ nextgroup=zoneTTL,zoneClass,zoneRRType skipwhite
