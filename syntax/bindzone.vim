@@ -93,9 +93,10 @@ call s:createChain("MX", ["zoneNumber", "zoneDomain"])
 call s:createChain("SRV", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneDomain"])
 call s:createChain("DS DLV TLSA NSEC3PARAM", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneHex"])
 call s:createChain("DNSKEY", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneBase64"])
+call s:createChain("SSHFP", ["zoneNumber", "zoneNumber", "zoneHex"])
 syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
       \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC
-      \ ATMA NAPTR KX CERT SINK OPT APL SSHFP IPSECKEY RRSIG NSEC
+      \ ATMA NAPTR KX CERT SINK OPT APL IPSECKEY RRSIG NSEC
       \ DHCID NSEC3 HIP NINFO RKEY TALINK CDS SPF UINFO UID
       \ GID UNSPEC NID L32 L64 LP URI CAA TA
       \ nextgroup=zoneRData skipwhite
