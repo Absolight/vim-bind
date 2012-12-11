@@ -47,6 +47,7 @@ let s:dataRegexp["zoneNumber"] = "/\\v<[0-9]+(\\s|;|$)@=/"
 let s:dataRegexp["zoneDomain"] = "/\\v[^[:space:]!\"#$%&'()*+,\\/:;<=>?@[\\]\\^`{|}~]+(\\s|;|$)@=/"
 let s:dataRegexp["zoneBase64"] = "/\\v[[:space:]\\n]@<=[a-zA-Z0-9\\/\\=\\+]+(\\s|;|$)@=/"
 let s:dataRegexp["zoneHex"] = "/\\v[[:space:]\\n]@<=[a-fA-F0-9]+(\\s+[a-fA-F0-9]+)*(\\s|;|$)@=/"
+let s:dataRegexp["zoneRR"] = "/\\v[[:space:]\\n]@<=[A-Z0-9]+(\\s|;|$)@=/"
 
 function! s:zoneName(name,num)
   return "zone_" . a:name . "_" . a:num
@@ -94,16 +95,17 @@ call s:createChain("SRV", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneDomain
 call s:createChain("DS DLV TLSA NSEC3PARAM", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneHex"])
 call s:createChain("DNSKEY", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneBase64"])
 call s:createChain("SSHFP", ["zoneNumber", "zoneNumber", "zoneHex"])
+call s:createChain("RRSIG", ["zoneRR", "zoneNumber", "zoneNumber", "zoneNumber", "zoneNumber", "zoneNumber", "zoneNumber", "zoneDomain", "zoneBase64"])
 syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
       \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC
-      \ ATMA NAPTR KX CERT SINK OPT APL IPSECKEY RRSIG NSEC
+      \ ATMA NAPTR KX CERT SINK OPT APL IPSECKEY NSEC
       \ DHCID NSEC3 HIP NINFO RKEY TALINK CDS SPF UINFO UID
       \ GID UNSPEC NID L32 L64 LP URI CAA TA
       \ nextgroup=zoneRData skipwhite
 syn match       zoneRRType              contained /\vTYPE\d+/ nextgroup=zoneUnknownType1 skipwhite
 hi def link     zoneRRType              Type
 
-syn match       zoneRData               contained /\v[^;]*/ contains=zoneDomain,zoneText,zoneNumber,zoneParen,zoneBase64,zoneHex,zoneUnknown
+syn match       zoneRData               contained /\v[^;]*/ contains=zoneDomain,zoneText,zoneNumber,zoneParen,zoneBase64,zoneHex,zoneUnknown,zoneRR
 
 syn match       zoneIPAddr              contained /\v<[0-9]{1,3}(.[0-9]{1,3}){,3}>/
 hi def link     zoneIPAddr              Number
@@ -144,10 +146,13 @@ hi def link     zoneNumber              Number
 syn match       zoneSerial              contained /\v<[0-9]{9,10}(\s|;|$)@=/
 hi def link     zoneSerial              Special
 
+syn match       zoneRR                  contained /\v[[:space:]\n]@<=[A-Z0-9]+(\s|;|$)@=/
+hi def link     zoneRR                  Type
+
 syn match       zoneErrParen            /\v\)/
 hi def link     zoneErrParen            Error
 
-syn region      zoneParen               contained start="(" end=")" contains=zoneBase64,zoneHex,zoneSerial,zoneNumber,zoneComment,zoneDomain
+syn region      zoneParen               contained start="(" end=")" contains=zoneBase64,zoneHex,zoneSerial,zoneNumber,zoneComment,zoneDomain,zoneRR
 
 syn match       zoneComment             /\v\;.*/
 hi def link     zoneComment             Comment
