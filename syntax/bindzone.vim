@@ -74,6 +74,8 @@ function! s:createChain(whose, ...)
       let l:str = "syn match " . s:zoneName(l:first, l:number) . " contained " . l:reg
       if l:c < len(i) - 1
         let l:str = l:str . " nextgroup=" . s:zoneName(l:first, l:number + 1)
+      else
+        let l:str = l:str . " nextgroup=" . s:zoneName(l:first, l:number)
       endif
       let l:str = l:str . " skipwhite"
       exe l:str
