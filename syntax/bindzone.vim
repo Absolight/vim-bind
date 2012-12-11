@@ -13,7 +13,7 @@ endif
 syn case match
 
 " Directives
-syn region      zoneRRecord             start=/\v^/ end=/\v$/ contains=zoneOwnerName,zoneSpecial,zoneTTL,zoneClass,zoneRRType,zoneComment,zoneUnknown
+syn region      zoneRRecord             start=/\v^/ end=/\v$/ contains=zoneOwnerName,zoneSpecial,zoneComment,zoneUnknown
 
 syn match       zoneDirective           /\v^\$ORIGIN\s+/   nextgroup=zoneOrigin,zoneUnknown
 syn match       zoneDirective           /\v^\$TTL\s+/      nextgroup=zoneNumber,zoneTTL,zoneUnknown
@@ -24,7 +24,7 @@ hi def link     zoneDirective           Macro
 syn match       zoneUnknown             contained /\v\S+/
 hi def link     zoneUnknown             Error
 
-syn match       zoneOwnerName           contained /\v^[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]+(\s|;)@=/ nextgroup=zoneTTL,zoneClass,zoneRRType skipwhite
+syn match       zoneOwnerName           contained /\v^[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]*(\s|;)@=/ nextgroup=zoneTTL,zoneClass,zoneRRType skipwhite
 hi def link     zoneOwnerName           Statement
 
 syn match       zoneOrigin              contained  /\v[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]+(\s|;|$)@=/
