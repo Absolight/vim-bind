@@ -42,6 +42,8 @@ hi def link     zoneTTL                 Constant
 syn keyword     zoneClass               contained IN CHAOS nextgroup=zoneRRType,zoneTTL   skipwhite
 hi def link     zoneClass               Include
 
+let b:looseDataRegexp = { 'zoneHex': "/\\v[^;]+/", }
+
 function! s:createChain(whose, ...)
   let l:first = split(a:whose, " ")[0]
   let l:number = 1
@@ -54,7 +56,13 @@ function! s:createChain(whose, ...)
       let i = args
     endif
     while l:c < len(i)
-      let l:str = "syn match zone" . l:first . l:number . " contained /\\v[^;[:space:]]+/ contains=zoneUnknown," . i[l:c]
+      let l:keyword = i[l:c]
+      if has_key(b:looseDataRegexp, l:keyword)
+        let l:reg = b:looseDataRegexp[l:keyword]
+      else
+        let l:reg = "/\\v[^;[:space:]]+/"
+      endif
+      let l:str = "syn match zone" . l:first . l:number . " contained " . l:reg . " contains=zoneUnknown," . l:keyword
       if l:c < len(i) - 1
         let l:str = l:str . " nextgroup=zone" . l:first . (l:number + 1)
       endif
