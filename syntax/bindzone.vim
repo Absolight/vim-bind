@@ -84,10 +84,10 @@ syn match       zoneIP6Addr             contained /\v<(\x{1,4}:){6}:\x{1,4}>/
 syn match       zoneIP6Addr             contained /\v<(\x{1,4}:){1,7}:(\s|;|$)@=/
 hi def link     zoneIP6Addr             Number
 
-syn match       zoneBase64              contained /\v[[:space:]\n]@<=[a-zA-Z0-9\/\=\+]+[[:space:]\n]@=/
+syn match       zoneBase64              contained /\v[[:space:]\n]@<=[a-zA-Z0-9\/\=\+]+(\s|;|$)@=/
 hi def link     zoneBase64              Identifier
 
-syn match       zoneHex                 contained /\v[[:space:]\n]@<=[a-fA-F0-9]+[[:space:]\n]@=/
+syn match       zoneHex                 contained /\v[[:space:]\n]@<=[a-fA-F0-9]+(\s|;|$)@=/
 hi def link     zoneHex                 Identifier
 
 syn match       zoneText                contained /\v"([^"\\]|\\.)*"(\s|;|$)@=/
