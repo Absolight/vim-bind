@@ -45,10 +45,10 @@ hi def link     zoneClass               Include
 let b:looseDataRegexp = { 'zoneHex': "/\\v[^;]+/", }
 
 function! s:createChain(whose, ...)
-  let l:first = split(a:whose, " ")[0]
+  let l:first = join(split(a:whose, " "), "_")
   let l:number = 1
   for args in a:000
-    exe "syn keyword zoneRRType contained " . a:whose . " nextgroup=zone" . l:first . l:number . " skipwhite"
+    exe "syn keyword zoneRRType contained " . a:whose . " nextgroup=zone_" . l:first . "_" . l:number . " skipwhite"
     let l:c = 0
     if type(args) == type("")
       let i = [args]
@@ -62,9 +62,9 @@ function! s:createChain(whose, ...)
       else
         let l:reg = "/\\v[^;[:space:]]+/"
       endif
-      let l:str = "syn match zone" . l:first . l:number . " contained " . l:reg . " contains=zoneUnknown," . l:keyword
+      let l:str = "syn match zone_" . l:first . "_" . l:number . " contained " . l:reg . " contains=zoneUnknown," . l:keyword
       if l:c < len(i) - 1
-        let l:str = l:str . " nextgroup=zone" . l:first . (l:number + 1)
+        let l:str = l:str . " nextgroup=zone_" . l:first . "_" . (l:number + 1)
       endif
       let l:str = l:str . " skipwhite"
       exe l:str
