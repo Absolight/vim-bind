@@ -33,7 +33,7 @@ hi def link     zoneOrigin              Statement
 syn match       zoneDomain              contained  /\v[^[:space:]!"#$%&'()*+,\/:;<=>?@[\]\^`{|}~]+(\s|;|$)@=/
 hi def link     zoneDomain              Underlined
 
-syn match       zoneSpecial             contained /\v^[@*.]\s/
+syn match       zoneSpecial             contained /\v^(\@|\*(\.\S*)?)\s@=/ nextgroup=zoneTTL,zoneClass,zoneRRType skipwhite
 hi def link     zoneSpecial             Special
 
 syn match       zoneTTL                 contained /\v<(\d[HhWwDd]?)*>/ nextgroup=zoneClass,zoneRRType skipwhite
