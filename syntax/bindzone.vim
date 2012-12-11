@@ -42,14 +42,38 @@ hi def link     zoneTTL                 Constant
 syn keyword     zoneClass               contained IN CHAOS nextgroup=zoneRRType,zoneTTL   skipwhite
 hi def link     zoneClass               Include
 
+function! s:createChain(whose, ...)
+  let l:first = split(a:whose, " ")[0]
+  let l:number = 1
+  for args in a:000
+    exe "syn keyword zoneRRType contained " . a:whose . " nextgroup=zone" . l:first . l:number . " skipwhite"
+    let l:c = 0
+    if type(args) == type("")
+      let i = [args]
+    else
+      let i = args
+    endif
+    while l:c < len(i)
+      let l:str = "syn match zone" . l:first . l:number . " contained /\\v[^;[:space:]]+/ contains=zoneUnknown," . i[l:c]
+      if l:c < len(i) - 1
+        let l:str = l:str . " nextgroup=zone" . l:first . (l:number + 1)
+      endif
+      let l:str = l:str . " skipwhite"
+      exe l:str
+      let l:c += 1
+      let l:number += 1
+    endwhile
+  endfor
+endfunction
+
 " From :
 " http://www.iana.org/assignments/dns-parameters/dns-parameters.xml#dns-parameters-3
 " keep sorted by rrtype value as possible, no obsolete or experimental RR.
 syn keyword     zoneRRType              contained A nextgroup=zoneIPAddr skipwhite
 syn keyword     zoneRRType              contained AAAA nextgroup=zoneIP6Addr skipwhite
 syn keyword     zoneRRType              contained NS CNAME PTR DNAME nextgroup=zoneDomain skipwhite
-syn keyword     zoneRRType              contained MX nextgroup=zoneMX skipwhite
-syn keyword     zoneRRType              contained DS DLV nextgroup=zoneDS skipwhite
+call s:createChain("MX", ["zoneNumber", "zoneDomain"])
+call s:createChain("DS DLV", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneHex"])
 syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
       \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC SRV
       \ ATMA NAPTR KX CERT SINK OPT APL SSHFP IPSECKEY RRSIG NSEC DNSKEY
@@ -99,10 +123,6 @@ hi def link     zoneNumber              Number
 
 syn match       zoneSerial              contained /\v<[0-9]{9,10}(\s|;|$)@=/
 hi def link     zoneSerial              Special
-
-syn match       zoneMX                  contained /\v[^;]*/ contains=zoneNumber,zoneDomain
-
-syn match       zoneDS                  contained /\v[^;]*/ contains=zoneNumber,zoneHex
 
 syn match       zoneErrParen            /\v\)/
 hi def link     zoneErrParen            Error
