@@ -48,6 +48,7 @@ let s:dataRegexp["zoneDomain"] = "/\\v[^[:space:]!\"#$%&'()*+,\\/:;<=>?@[\\]\\^`
 let s:dataRegexp["zoneBase64"] = "/\\v[[:space:]\\n]@<=[a-zA-Z0-9\\/\\=\\+]+(\\s|;|$)@=/"
 let s:dataRegexp["zoneHex"] = "/\\v[[:space:]\\n]@<=[a-fA-F0-9]+(\\s+[a-fA-F0-9]+)*(\\s|;|$)@=/"
 let s:dataRegexp["zoneRR"] = "/\\v[[:space:]\\n]@<=[A-Z0-9]+(\\s|;|$)@=/"
+let s:dataRegexp["zoneText"] = "/\\v\"([^\"\\\\]|\\\\.)*\"(\\s|;|$)@=/"
 
 function! s:zoneName(name,num)
   return "zone_" . a:name . "_" . a:num
@@ -100,7 +101,8 @@ call s:createChain("SSHFP", ["zoneNumber", "zoneNumber", "zoneHex"])
 call s:createChain("RRSIG", ["zoneRR", "zoneNumber", "zoneNumber", "zoneNumber", "zoneNumber", "zoneNumber", "zoneNumber", "zoneDomain", "zoneBase64"])
 call s:createChain("NSEC", ["zoneDomain", "zoneRR"])
 call s:createChain("NSEC3", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneHex", "zoneDomain", "zoneRR"])
-syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
+call s:createChain("TXT", "zoneText")
+syn keyword     zoneRRType              contained SOA WKS HINFO RP
       \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC
       \ ATMA NAPTR KX CERT SINK OPT APL IPSECKEY
       \ DHCID HIP NINFO RKEY TALINK CDS SPF UINFO UID
@@ -109,7 +111,7 @@ syn keyword     zoneRRType              contained SOA WKS HINFO TXT RP
 syn match       zoneRRType              contained /\vTYPE\d+/ nextgroup=zoneUnknownType1 skipwhite
 hi def link     zoneRRType              Type
 
-syn match       zoneRData               contained /\v[^;]*/ contains=zoneDomain,zoneText,zoneNumber,zoneParen,zoneBase64,zoneHex,zoneUnknown,zoneRR
+syn match       zoneRData               contained /\v[^;]*/ contains=zoneDomain,zoneNumber,zoneParen,zoneBase64,zoneHex,zoneUnknown,zoneRR
 
 syn match       zoneIPAddr              contained /\v<[0-9]{1,3}(.[0-9]{1,3}){,3}>/
 hi def link     zoneIPAddr              Number
