@@ -49,6 +49,8 @@ let s:dataRegexp["zoneBase64"] = "/\\v[[:space:]\\n]@<=[a-zA-Z0-9\\/\\=\\+]+(\\s
 let s:dataRegexp["zoneHex"] = "/\\v[[:space:]\\n]@<=[a-fA-F0-9]+(\\s|;|$)@=/"
 let s:dataRegexp["zoneRR"] = "/\\v[[:space:]\\n]@<=[A-Z0-9]+(\\s|;|$)@=/"
 let s:dataRegexp["zoneText"] = "/\\v\"([^\"\\\\]|\\\\.)*\"(\\s|;|$)@=/"
+let s:dataRegexp["zoneSerial"] = "/\\v<[0-9]{9,10}(\\s|;|$)@=/"
+let s:dataRegexp["zoneTTL"] = "/\\v<(\\d[HhWwDd]?)*>/"
 
 function! s:zoneName(name,num)
   return "zone_" . a:name . "_" . a:num
@@ -102,7 +104,8 @@ call s:createChain("RRSIG", ["zoneRR", "zoneNumber", "zoneNumber", "zoneNumber",
 call s:createChain("NSEC", ["zoneDomain", "zoneRR"])
 call s:createChain("NSEC3", ["zoneNumber", "zoneNumber", "zoneNumber", "zoneHex", "zoneDomain", "zoneRR"])
 call s:createChain("TXT", "zoneText")
-syn keyword     zoneRRType              contained SOA WKS HINFO RP
+call s:createChain("SOA", ["zoneDomain", "zoneDomain", "zoneSerial", "zoneTTL"])
+syn keyword     zoneRRType              contained WKS HINFO RP
       \ AFSDB X25 ISDN RT NSAP NSAP-PTR SIG KEY PX GPOS LOC EID NIMLOC
       \ ATMA NAPTR KX CERT SINK OPT APL IPSECKEY
       \ DHCID HIP NINFO RKEY TALINK CDS SPF UINFO UID
