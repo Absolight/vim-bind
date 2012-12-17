@@ -2,7 +2,7 @@
 " Language:     BIND zone files (RFC1035)
 " Maintainer:   Mathieu Arnold <mat@mat.cc>
 " URL:          https://github.com/Absolight/vim-bind
-" Last Change:  Thu 2006-04-20 12:30:45 UTC
+" Last Change:  Mon 2012-12-17 19:33:55 CET
 "
 " Based on an earlier version by Julian Mehnle, with heavy modifications.
 
