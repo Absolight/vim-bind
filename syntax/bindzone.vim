@@ -52,8 +52,8 @@ let s:dataRegexp["zoneText"] = "/\\v\"([^\"\\\\]|\\\\.)*\"(\\s|;|$)@=/"
 let s:dataRegexp["zoneSerial"] = "/\\v<[0-9]{9,10}(\\s|;|$)@=/"
 let s:dataRegexp["zoneTTL"] = "/\\v<(\\d[HhWwDd]?)*>/"
 
-function! s:zoneName(name,num)
-  return "zone_" . a:name . "_" . a:num
+function! s:zoneName(...)
+  return "zone_" . join(a:000, "_")
 endfunction
 
 function! s:createChain(whose, ...)
