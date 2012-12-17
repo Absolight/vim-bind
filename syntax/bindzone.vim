@@ -58,33 +58,60 @@ endfunction
 
 function! s:createChain(whose, ...)
   let l:first = join(split(a:whose, " "), "_")
-  let l:number = 1
   for args in a:000
-    exe "syn keyword zoneRRType contained " . a:whose . " nextgroup=" . s:zoneName(l:first, l:number) . " skipwhite"
-    let l:c = 0
     if type(args) == type("")
       let i = [args]
     else
       let i = args
     endif
-    while l:c < len(i)
+    let l:size = len(i)
+    let l:c = 0
+    exe "syn keyword zoneRRType contained " . a:whose  . " skipwhite nextgroup=" . s:zoneName(l:first, l:c) . "," . s:zoneName(l:first, l:c, "SP")
+    while l:c < l:size
       let l:keyword = i[l:c]
-      if has_key(s:dataRegexp, l:keyword)
-        let l:reg = s:dataRegexp[l:keyword]
+
+      let l:str = "syn match " . s:zoneName(l:first, l:c) . " contained skipwhite " . s:dataRegexp[l:keyword]
+      if l:c == l:size - 1
+        " if we're at the end, loop.
+        let l:str = l:str . " nextgroup=" . s:zoneName(l:first, l:c)
       else
-        let l:reg = "/\\v[^;[:space:]]+/"
+        " if we're not at the end, nextgroup may be the next group or a
+        " parenthesis.
+        let l:str = l:str . " nextgroup=" . s:zoneName(l:first, l:c + 1)
+              \ . "," . s:zoneName(l:first, l:c, "SP")
       endif
-      let l:str = "syn match " . s:zoneName(l:first, l:number) . " contained " . l:reg
-      if l:c < len(i) - 1
-        let l:str = l:str . " nextgroup=" . s:zoneName(l:first, l:number + 1)
-      else
-        let l:str = l:str . " nextgroup=" . s:zoneName(l:first, l:number)
-      endif
-      let l:str = l:str . " skipwhite"
       exe l:str
-      exe "hi link " . s:zoneName(l:first, l:number) . " " . l:keyword
+      exe "hi link " . s:zoneName(l:first, l:c) . " " . l:keyword
+
+      if l:c < size - 1
+        let l:d = l:c + 1
+        " or, it could be a multiline record which can start by either a
+        " the first type, or a comment followed by the first type.
+        exe "syn region " . s:zoneName(l:first, l:c, "SP") . " contained start=\"(\" end=\")\" skipwhite skipnl"
+              \" contains=" . s:zoneName(l:first,l:c,l:d) . "," s:zoneName(l:first, l:c, l:d - 1, "Comment")
+        exe "hi link " . s:zoneName(l:first, l:c, "SP") . " Macro"
+        exe "syn match " . s:zoneName(l:first, l:c, l:d - 1, "Comment") . " /\\v\\;.*/" . " skipwhite skipnl nextgroup=" . s:zoneName(l:first, l:c, l:d)
+        exe "hi link " . s:zoneName(l:first, l:c, l:d - 1, "Comment") . " zoneComment"
+        while l:d < l:size
+          let l:keyword = i[l:d]
+
+          if l:d == l:size - 1
+            let l:next = l:d
+          else
+            let l:next = l:d + 1
+          endif
+
+          exe "syn match " . s:zoneName(l:first, l:c, l:d) . " contained skipwhite skipnl " . s:dataRegexp[l:keyword]
+                \ . " nextgroup=" . s:zoneName(l:first, l:c, l:next) . "," . s:zoneName(l:first, l:c, l:d, "Comment")
+          exe "hi link " . s:zoneName(l:first, l:c, l:d) . " " . l:keyword
+
+          exe "syn match " . s:zoneName(l:first, l:c, l:d, "Comment") . " /\\v\\;.*/" . " skipwhite skipnl nextgroup=" . s:zoneName(l:first, l:c, l:next)
+          exe "hi link " . s:zoneName(l:first, l:c, l:d, "Comment") . " zoneComment"
+
+          let l:d += 1
+        endwhile
+      endif
       let l:c += 1
-      let l:number += 1
     endwhile
   endfor
 endfunction
