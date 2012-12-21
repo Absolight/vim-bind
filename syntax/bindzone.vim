@@ -43,14 +43,14 @@ syn keyword     zoneClass               contained IN CHAOS nextgroup=zoneRRType,
 hi def link     zoneClass               Include
 
 let s:dataRegexp = {}
-let s:dataRegexp["zoneNumber"] = "/\\v<[0-9]+(\\s|;|$)@=/"
-let s:dataRegexp["zoneDomain"] = "/\\v[^[:space:]!\"#$%&'()*+,\\/:;<=>?@[\\]\\^`{|}~]+(\\s|;|$)@=/"
-let s:dataRegexp["zoneBase64"] = "/\\v[[:space:]\\n]@<=[a-zA-Z0-9\\/\\=\\+]+(\\s|;|$)@=/"
-let s:dataRegexp["zoneHex"] = "/\\v[[:space:]\\n]@<=[a-fA-F0-9]+(\\s|;|$)@=/"
-let s:dataRegexp["zoneRR"] = "/\\v[[:space:]\\n]@<=[A-Z0-9]+(\\s|;|$)@=/"
-let s:dataRegexp["zoneText"] = "/\\v\"([^\"\\\\]|\\\\.)*\"(\\s|;|$)@=/"
-let s:dataRegexp["zoneSerial"] = "/\\v<[0-9]{9,10}(\\s|;|$)@=/"
-let s:dataRegexp["zoneTTL"] = "/\\v<(\\d[HhWwDd]?)*>/"
+let s:dataRegexp["zoneNumber"] = "/\\v<[0-9]+>/"
+let s:dataRegexp["zoneDomain"] = "/\\v[^[:space:]!\"#$%&'()*+,\\/:;<=>?@[\\]\\^`{|}~]+>/"
+let s:dataRegexp["zoneBase64"] = "/\\v[[:space:]]@<=[a-zA-Z0-9\\/\\=\\+]+[a-zA-Z0-9\\/\\=\\+]@!/"
+let s:dataRegexp["zoneHex"] = "/\\v<[a-fA-F0-9]+>/"
+let s:dataRegexp["zoneRR"] = "/\\v<[A-Z0-9]+>/"
+let s:dataRegexp["zoneText"] = "/\\v\"([^\"\\\\]|\\\\.)*\"/"
+let s:dataRegexp["zoneSerial"] = "/\\v<[0-9]{9,10}>/"
+let s:dataRegexp["zoneTTL"] = "/\\v<(\\d[HhWwDd]?)+>/"
 
 function! s:zoneName(...)
   return "zone_" . join(a:000, "_")
