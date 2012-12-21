@@ -44,7 +44,7 @@ hi def link     zoneClass               Include
 
 let s:dataRegexp = {}
 let s:dataRegexp["zoneNumber"] = "/\\v<[0-9]+>/"
-let s:dataRegexp["zoneDomain"] = "/\\v[^[:space:]!\"#$%&'()*+,\\/:;<=>?@[\\]\\^`{|}~]+>/"
+let s:dataRegexp["zoneDomain"] = "/\\v[^[:space:]!\"#$%&'()*+,\\/:;<=>?@[\\]\\^`{|}~]+[^[:space:]!\"#$%&'()*+,\\/:;<=>?@[\\]\\^`{|}~]@!/"
 let s:dataRegexp["zoneBase64"] = "/\\v[[:space:]]@<=[a-zA-Z0-9\\/\\=\\+]+[a-zA-Z0-9\\/\\=\\+]@!/"
 let s:dataRegexp["zoneHex"] = "/\\v<[a-fA-F0-9]+>/"
 let s:dataRegexp["zoneRR"] = "/\\v<[A-Z0-9]+>/"
