@@ -46,9 +46,9 @@ syn match	namedError	/[^;{#]$/
 " --- top-level keywords
 
 syn keyword	namedInclude	include nextgroup=namedString skipwhite
-syn keyword	namedKeyword	acl key nextgroup=namedIntIdent skipwhite
+syn keyword	namedKeyword	acl masters key nextgroup=namedIntIdent skipwhite
 syn keyword	namedKeyword	server nextgroup=namedIdentifier skipwhite
-syn keyword	namedKeyword	controls nextgroup=namedSection skipwhite
+syn keyword	namedKeyword	controls statistics-channels nextgroup=namedSection skipwhite
 syn keyword	namedKeyword	trusted-keys nextgroup=namedIntSection skipwhite
 syn keyword	namedKeyword	logging nextgroup=namedLogSection skipwhite
 syn keyword	namedKeyword	options nextgroup=namedOptSection skipwhite
