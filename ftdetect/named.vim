@@ -1,1 +1,1 @@
-au BufNewFile,BufRead named.conf,rndc.conf	setf named
+au BufNewFile,BufRead named.conf,rndc.conf,*-named.conf,*.named.conf,named.conf-*,named.conf.*	setf named
